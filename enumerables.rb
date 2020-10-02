@@ -10,6 +10,7 @@ module Enumerable
     end
     self
   end
+
   #Each index
   def my_each_with_index
     index = 0
@@ -19,10 +20,12 @@ module Enumerable
     end
     self
   end
+
+  # My Select Method
+  def my_select
+  end
+
 end
 
-array.my_each_with_index do |n, i|
-  print n
-  puts i
-  
-end
+# [1,2,3,4,5].my_each {|n| print n}
+[1,2,3,4,5].my_select { |n| n.even? }
