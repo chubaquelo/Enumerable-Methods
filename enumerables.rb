@@ -115,17 +115,107 @@ def my_any?(cond = nil)
         end
       end
   else
-    self.my_each do |e|
-      if e == true
-        classflag = true
-        break
-      end
-    end
+    false
   end
     classflag
   end
+
+# my_none Method
+
+def my_none?(cond = nil)
+  classflag = true
+  if cond != nil
+    if cond.is_a?(Class)
+      self.my_each do |e|
+        if e.is_a?(cond)
+          classflag = false
+          break
+        end
+      end
+    elsif cond == Numeric
+      self.my_each do |e|
+        if e.is_a?(Numeric)
+          classflag = false
+          break
+        end
+      end
+    elsif cond == true || cond == false
+      self.my_each do |e|
+        if e == cond
+          classflag = false
+          break
+        end
+      end
+    elsif cond != Class and cond.is_a?(Regexp)
+      self.my_each do |e|
+        if e.is_a?(String)
+          if e.match(cond)
+            classflag = false
+            break
+          end
+        end
+      end
+    end
+  elsif block_given?
+      self.my_each do |e|
+        if yield(e)
+          classflag = false
+          break
+        end
+      end
+  else
+    true
+  end
+    classflag
 end
 
+# my_none Method (another approach)
+def my_none_2?(cond = nil)
+  res = false
+  if cond != nil
+    inv = self.my_any?(cond)
+  elsif block_given?
+    block = yield
+    inv = self.my_any? {yield.to_s}
+  end
+  inv == true ? res = false : res = true
+  res
+  block
+end
+
+# my_count Method
+
+def my_count(cond = nil)
+  counter = 0
+  if block_given?
+    self.each do |f|
+      if yield f
+        counter += 1
+      end
+    end
+    counter
+  elsif cond == nil
+    self.length
+  elsif cond != nil
+    self.each do |e|
+      if cond == e
+        counter += 1
+      end
+    end
+    counter
+  end
+end
+
+end
+
+
+#my_count test
+# p [1, 2, 4, 4].count {|n| n == 1}
+# p [1, 2, 4, 4].my_count {|n| n == 1}
+#my_none test
+# p [1].none? { |n| n == 2 }
+# p [1].my_none? { |n| n == 2 }
+# p [1].my_none_2? { |n| n == 1 }
 
 # [1,2,3,4,5].my_each {|n| print n}
 # p [1,2,3,4,5].my_select { |n| n.even? }
