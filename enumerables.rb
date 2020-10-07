@@ -233,31 +233,57 @@ def my_count(cond = nil)
 end
 
 # my_map method
-# def my_map
-#   new_array = []
-#   if block_given?
-#     self.my_each |e| do
-#       if yield(e)
-#         new_array.push(e)
-#       end
-#     end
-#     new_array
-#   else
-#     new_array = self
-#     new_array
-#   end
-# end
+def my_map
+  new_array = []
+  if block_given?
+    self.my_each do |e|
+      new_array.push(yield e)
+    end
+    new_array
+  else
+    new_array = self
+    new_array
+  end
+end
 
+# my_inject Method
+def my_inject(init = 0)
+  res = init
+  self.my_each do |e|
+    res = yield res, e
+  end
+  res
+end
+end
+
+# multiply_els Method
+def multiply_els(arr)
+  res = arr.my_inject(1) { |result, element| result * element }
+  res
 end
 
 
+p multiply_els([3,5,6])
+
+# p [1, 2, 3, 4].inject(0) { |result, element| result + element } # => 10
+# p [1, 2, 3, 4].inject(20) { |result, element| result + element } # => 10
+# p [1, 2, 3, 4, 5].my_inject(0) {|result, element| result + element }
+
+# p [1, 2, "s", 4, 5].my_inject(0) {|result, element| result + element }
+# p [1, 2, "s", 4, 5].inject(0) {|result, element| result + element }
+# p [1, 2, 3, 4, 5].my_inject(0) {|result, element| result + element }
+
+
+
+# p (1..5).map {|n| n * 2}
+# p (1..5).my_map {|n| n * 2}
 
 # p [1,2,3,4,5].map
 #my_count test
 # p [1, 2, 4, 4].count {|n| n == 4}
 # p [1, 2, 4, 4].my_count {|n| n == 4}
-p [].count
-p [].my_count
+# p [].count
+# p [].my_count
 #my_none test
 # p [1,2,3,"ser"].any?("dsf")
 # p [1,2,3,"ser"].my_any?("dsf")
