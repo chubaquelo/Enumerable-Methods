@@ -42,24 +42,62 @@ module Enumerable
         end
       end
       flag
-    elsif type.is_a?(Class) and type != nil
+    # Elsif for Class argument query
+    elsif type.is_a?(Class) and type != Numeric and type != nil
       classflag = true
-      firstclass = self[0].class.ancestors[0]
+      firstclass = self[0].class.name
       self.my_each do |m|
-        if m.class.ancestors[0] != firstclass
+        if m.class.name != firstclass
+          classflag = false
+        end
+      end
+      if self.empty?
+        classflag = false
+      end
+      classflag
+    # Elsif for Numeric superclass query
+    elsif type == Numeric
+      classflag = true
+      self.my_each do |m|
+        if (m.class.superclass.name != "Numeric")
+          classflag = false
+        elsif self.empty?
           classflag = false
         end
       end
       classflag
+    elsif not block_given? and type == nil
+      true
     end
   end
+
+# my_any? Method
+
+def my_any?
+  classflag = false
+  self.my_each do |e|
+    if e == true
+      classflag = true
+      break
+    end
+  end
+  classflag
 end
 
+
+
+end
+
+
+
+
+# p [nil].my_any?
+# p [nil].any?
 
 # [1,2,3,4,5].my_each {|n| print n}
 # p [1,2,3,4,5].my_select { |n| n.even? }
 # p ["text", "tas", "aasdf"].my_all? { |n| n.length <= 2 }
-# p [nil].my_all?(Numeric) { |n| n.length >= 3 }
-
+# p [1,2,"s"].my_all?(Integer)
+# p [1,2,"a"].all?(Integer)
 # p [2, 1.5, 4i].my_all?(Numeric)
 # p 3.14.class.name
