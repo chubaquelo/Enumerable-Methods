@@ -1,4 +1,4 @@
-array = [5, 6, 7, 8, 9]
+# rubocop:disable Metrics/ModuleLength, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/BlockNesting, Style/IfInsideElse, Metrics/AbcSize
 
 module Enumerable
   # Each methods
@@ -279,3 +279,4 @@ def multiply_els(arr)
   res = arr.my_inject(1) { |result, element| result * element }
   res
 end
+# rubocop:enable Metrics/ModuleLength, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/BlockNesting, Style/IfInsideElse, Metrics/AbcSize
