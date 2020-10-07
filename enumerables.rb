@@ -73,26 +73,59 @@ module Enumerable
 
 # my_any? Method
 
-def my_any?
+def my_any?(cond = nil)
   classflag = false
-  self.my_each do |e|
-    if e == true
-      classflag = true
-      break
+  if cond != nil
+    if cond.is_a?(Class)
+      self.my_each do |e|
+        if e.is_a?(cond)
+          classflag = true
+          break
+        end
+      end
+    elsif cond == Numeric
+      self.my_each do |e|
+        if e.is_a?(Numeric)
+          classflag = true
+          break
+        end
+      end
+    elsif cond == true || cond == false
+      self.my_each do |e|
+        if e == cond
+          classflag = true
+          break
+        end
+      end
+    elsif cond != Class and cond.is_a?(Regexp)
+      self.my_each do |e|
+        if e.is_a?(String)
+          if e.match(cond)
+            classflag = true
+            break
+          end
+        end
+      end
+    end
+  elsif block_given?
+      self.my_each do |e|
+        if yield(e)
+          classflag = true
+          break
+        end
+      end
+  else
+    self.my_each do |e|
+      if e == true
+        classflag = true
+        break
+      end
     end
   end
-  classflag
+    classflag
+  end
 end
 
-
-
-end
-
-
-
-
-# p [nil].my_any?
-# p [nil].any?
 
 # [1,2,3,4,5].my_each {|n| print n}
 # p [1,2,3,4,5].my_select { |n| n.even? }
