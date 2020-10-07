@@ -106,6 +106,13 @@ def my_any?(cond = nil)
           end
         end
       end
+    elsif cond.is_a?(Numeric) || cond.is_a?(String)
+      self.my_each do |e|
+        if cond == e
+          classflag = true
+          break
+        end
+      end
     end
   elsif block_given?
       self.my_each do |e|
@@ -114,6 +121,12 @@ def my_any?(cond = nil)
           break
         end
       end
+  elsif cond == nil and not block_given?
+    if self.empty?
+      classflag = false
+    else
+      classflag = true
+    end
   else
     false
   end
@@ -121,7 +134,6 @@ def my_any?(cond = nil)
   end
 
 # my_none Method
-
 def my_none?(cond = nil)
   classflag = true
   if cond != nil
@@ -155,7 +167,15 @@ def my_none?(cond = nil)
           end
         end
       end
+    elsif cond.is_a?(Numeric) || cond.is_a?(String)
+      self.my_each do |e|
+        if cond == e
+          classflag = false
+          break
+        end
+      end
     end
+
   elsif block_given?
       self.my_each do |e|
         if yield(e)
@@ -163,11 +183,17 @@ def my_none?(cond = nil)
           break
         end
       end
-  else
-    true
-  end
-    classflag
-end
+    elsif cond == nil and not block_given?
+      if self.empty?
+        classflag = true
+      else
+        classflag = false
+      end
+    else
+      true
+    end
+      classflag
+    end
 
 # my_none Method (another approach)
 def my_none_2?(cond = nil)
@@ -188,7 +214,7 @@ end
 def my_count(cond = nil)
   counter = 0
   if block_given?
-    self.each do |f|
+    self.my_each do |f|
       if yield f
         counter += 1
       end
@@ -197,7 +223,7 @@ def my_count(cond = nil)
   elsif cond == nil
     self.length
   elsif cond != nil
-    self.each do |e|
+    self.my_each do |e|
       if cond == e
         counter += 1
       end
@@ -206,15 +232,35 @@ def my_count(cond = nil)
   end
 end
 
+# my_map method
+# def my_map
+#   new_array = []
+#   if block_given?
+#     self.my_each |e| do
+#       if yield(e)
+#         new_array.push(e)
+#       end
+#     end
+#     new_array
+#   else
+#     new_array = self
+#     new_array
+#   end
+# end
+
 end
 
 
+
+# p [1,2,3,4,5].map
 #my_count test
-# p [1, 2, 4, 4].count {|n| n == 1}
-# p [1, 2, 4, 4].my_count {|n| n == 1}
+# p [1, 2, 4, 4].count {|n| n == 4}
+# p [1, 2, 4, 4].my_count {|n| n == 4}
+p [].count
+p [].my_count
 #my_none test
-# p [1].none? { |n| n == 2 }
-# p [1].my_none? { |n| n == 2 }
+# p [1,2,3,"ser"].any?("dsf")
+# p [1,2,3,"ser"].my_any?("dsf")
 # p [1].my_none_2? { |n| n == 1 }
 
 # [1,2,3,4,5].my_each {|n| print n}
