@@ -210,7 +210,6 @@ def my_none_2?(cond = nil)
 end
 
 # my_count Method
-
 def my_count(cond = nil)
   counter = 0
   if block_given?
@@ -233,9 +232,14 @@ def my_count(cond = nil)
 end
 
 # my_map method
-def my_map
+def my_map(pr = nil)
   new_array = []
-  if block_given?
+  if pr.is_a?(Proc)
+    self.my_each do |e|
+      new_array.push(pr.call(e))
+    end
+    return new_array
+  elsif block_given?
     self.my_each do |e|
       new_array.push(yield e)
     end
@@ -254,6 +258,20 @@ def my_inject(init = 0)
   end
   res
 end
+
+# my_map_proc Method
+def my_map_proc(pr)
+  new_array = []
+  if pr.is_a?(Proc)
+    self.my_each do |e|
+      new_array.push(pr.call(e))
+    end
+    return new_array
+  elsif
+    new_array = self
+    new_array
+  end
+end
 end
 
 # multiply_els Method
@@ -261,38 +279,3 @@ def multiply_els(arr)
   res = arr.my_inject(1) { |result, element| result * element }
   res
 end
-
-
-p multiply_els([3,5,6])
-
-# p [1, 2, 3, 4].inject(0) { |result, element| result + element } # => 10
-# p [1, 2, 3, 4].inject(20) { |result, element| result + element } # => 10
-# p [1, 2, 3, 4, 5].my_inject(0) {|result, element| result + element }
-
-# p [1, 2, "s", 4, 5].my_inject(0) {|result, element| result + element }
-# p [1, 2, "s", 4, 5].inject(0) {|result, element| result + element }
-# p [1, 2, 3, 4, 5].my_inject(0) {|result, element| result + element }
-
-
-
-# p (1..5).map {|n| n * 2}
-# p (1..5).my_map {|n| n * 2}
-
-# p [1,2,3,4,5].map
-#my_count test
-# p [1, 2, 4, 4].count {|n| n == 4}
-# p [1, 2, 4, 4].my_count {|n| n == 4}
-# p [].count
-# p [].my_count
-#my_none test
-# p [1,2,3,"ser"].any?("dsf")
-# p [1,2,3,"ser"].my_any?("dsf")
-# p [1].my_none_2? { |n| n == 1 }
-
-# [1,2,3,4,5].my_each {|n| print n}
-# p [1,2,3,4,5].my_select { |n| n.even? }
-# p ["text", "tas", "aasdf"].my_all? { |n| n.length <= 2 }
-# p [1,2,"s"].my_all?(Integer)
-# p [1,2,"a"].all?(Integer)
-# p [2, 1.5, 4i].my_all?(Numeric)
-# p 3.14.class.name
