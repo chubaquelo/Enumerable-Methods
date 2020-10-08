@@ -4,9 +4,8 @@ module Enumerable
   # Each methods
   def my_each
     index = 0
-    sizing = self.size
-    while index < sizing do
-      yield self.to_a[index]
+    while index < size
+      yield to_a[index]
       index += 1
     end
     self
@@ -15,8 +14,7 @@ module Enumerable
   # Each index
   def my_each_with_index
     index = 0
-    sizing = self.to_a.length
-    while index < sizing do
+    while index < to_a.length
       yield(Array(self)[index], index)
       index += 1
     end
@@ -26,7 +24,7 @@ module Enumerable
   # my_select Method
   def my_select
     new_arr = []
-    self.my_each do |n|
+    my_each do |n|
       new_arr << n if yield(n)
     end
     new_arr
@@ -36,7 +34,7 @@ module Enumerable
   def my_all?(type = nil)
     if block_given? and type.nil?
       flag = true
-      self.my_each do |n|
+      my_each do |n|
         if n.is_a?(String)
           flag = false unless yield(n)
         elsif n.is_a?(Numeric)
@@ -46,72 +44,68 @@ module Enumerable
       flag
     # Elsif for Regular Expression
     elsif type.is_a?(Regexp)
-      self.my_each do |e|
+      my_each do |e|
         if e.is_a?(String)
           return false unless e.match?(type)
         end
       end
       return true
     # Elsif for Class argument query
-    elsif type.is_a?(Class) and type != Numeric and type != nil
+    elsif type.is_a?(Class) and type != Numeric and !type.nil?
       classflag = true
       firstclass = self[0].class.name
-      self.my_each do |m|
-        if m.class.name != firstclass
-          classflag = false
-        end
+      my_each do |m|
+        classflag = false if m.class.name != firstclass
       end
-      if self.empty?
-        classflag = false
-      end
+      classflag = false if empty?
       classflag
     # Elsif for Numeric superclass query
     elsif type == Numeric
       classflag = true
-      self.my_each do |m|
+      my_each do |m|
         if m.class.superclass.name != "Numeric"
           classflag = false
-        elsif self.empty?
+        elsif empty?
           classflag = false
         end
       end
       classflag
-    elsif !block_given? and type == nil
-      self.my_each do |m|
+    elsif !block_given? and type.nil?
+      my_each do |m|
         return false if m.nil?
       end
       true
     end
   end
 
-# my_any? Method
+  # my_any? Method
 
   def my_any?(cond = nil)
     classflag = false
-    if cond != nil
+    if !cond.nil?
       if cond.is_a?(Class)
-        self.my_each do |e|
+        my_each do |e|
           if e.is_a?(cond)
             classflag = true
             break
           end
         end
       elsif cond == Numeric
-        self.my_each do |e|
+        my_each do |e|
           if e.is_a?(Numeric)
             classflag = true
             break
           end
         end
       elsif cond == true || cond == false
-        self.my_each do |e|
+        my_each do |e|
           if e == cond
             classflag = true
             break
           end
         end
       elsif cond != Class and cond.is_a?(Regexp)
-        self.my_each do |e|
+        my_each do |e|
           if e.is_a?(String)
             if e.match?(cond)
               classflag = true
@@ -120,7 +114,7 @@ module Enumerable
           end
         end
       elsif cond.is_a?(Numeric) || cond.is_a?(String)
-        self.my_each do |e|
+        my_each do |e|
           if cond == e
             classflag = true
             break
@@ -128,14 +122,14 @@ module Enumerable
         end
       end
     elsif block_given?
-        self.my_each do |e|
-          if yield(e)
-            classflag = true
-            break
-          end
+      my_each do |e|
+        if yield(e)
+          classflag = true
+          break
         end
+      end
     elsif cond.nil? and !block_given?
-      if self.empty?
+      if empty?
         classflag = false
       else
         classflag = true
@@ -143,36 +137,36 @@ module Enumerable
     else
       false
     end
-      classflag
+    classflag
   end
 
   # my_none Method
   def my_none?(cond = nil)
     classflag = true
-    if cond != nil
+    if !cond.nil?
       if cond.is_a?(Class)
-        self.my_each do |e|
+        my_each do |e|
           if e.is_a?(cond)
             classflag = false
             break
           end
         end
       elsif cond == Numeric
-        self.my_each do |e|
+        my_each do |e|
           if e.is_a?(Numeric)
             classflag = false
             break
           end
         end
       elsif cond == true || cond == false
-        self.my_each do |e|
+        my_each do |e|
           if e == cond
             classflag = false
             break
           end
         end
       elsif cond != Class and cond.is_a?(Regexp)
-        self.my_each do |e|
+        my_each do |e|
           if e.is_a?(String)
             if e.match?(cond)
               classflag = false
@@ -181,7 +175,7 @@ module Enumerable
           end
         end
       elsif cond.is_a?(Numeric) || cond.is_a?(String)
-        self.my_each do |e|
+        my_each do |e|
           if cond == e
             classflag = false
             break
@@ -190,14 +184,14 @@ module Enumerable
       end
 
     elsif block_given?
-        self.my_each do |e|
-          if yield(e)
-            classflag = false
-            break
-          end
+      my_each do |e|
+        if yield(e)
+          classflag = false
+          break
         end
+      end
     elsif cond.nil? and !block_given?
-      if self.to_a.empty?
+      if to_a.empty?
         classflag = true
       else
         classflag = false
@@ -205,13 +199,13 @@ module Enumerable
     else
       true
     end
-      classflag
+    classflag
   end
 
   # my_none Method (another approach)
   # def my_none_2?(cond = nil)
   #   res = false
-  #   if cond != nil
+  #   if !cond.nil?
   #     inv = self.my_any?(cond)
   #   elsif block_given?
   #     block = yield
@@ -226,16 +220,15 @@ module Enumerable
   def my_count(cond = nil)
     counter = 0
     if block_given?
-      self.my_each do |f|
-        if yield f
-          counter += 1
-        end
+      my_each do |f|
+        counter += if yield f
       end
       counter
-    elsif cond == nil
-      self.length
+    end
+    elsif cond.nil?
+      length
     elsif !cond.nil?
-      self.my_each do |e|
+      my_each do |e|
         counter += 1 if cond == e
       end
       counter
@@ -246,12 +239,12 @@ module Enumerable
   def my_map(pro = nil)
     new_array = []
     if pro.is_a?(Proc)
-      self.my_each do |e|
+      my_each do |e|
         new_array.push(pro.call(e))
       end
       return new_array
     elsif block_given?
-      self.my_each do |e|
+      my_each do |e|
         new_array.push(yield e)
       end
       new_array
@@ -264,7 +257,7 @@ module Enumerable
   # my_inject Method
   def my_inject(init = 0)
     res = init
-    self.my_each do |e|
+    my_each do |e|
       res = yield res, e
     end
     res
@@ -272,17 +265,17 @@ module Enumerable
 
   # my_map_proc Method
   def my_map_proc(pro)
-  new_array = []
-  if pro.is_a?(Proc)
-    self.my_each do |e|
-      new_array.push(pro.call(e))
+    new_array = []
+    if pro.is_a?(Proc)
+      my_each do |e|
+        new_array.push(pro.call(e))
+      end
+      return new_array
+    elsif
+      new_array = self
+      new_array
     end
-    return new_array
-  elsif
-    new_array = self
-    new_array
   end
-end
 end
 
 # multiply_els Method
