@@ -129,11 +129,7 @@ module Enumerable
         end
       end
     elsif cond.nil? and !block_given?
-      if empty?
-        classflag = false
-      else
-        classflag = true
-      end
+      empty? ? classflag = false : classflag = true
     else
       false
     end
@@ -158,7 +154,7 @@ module Enumerable
             break
           end
         end
-      elsif cond == true || cond == false
+      elsif cond.is_a?(Boolean)
         my_each do |e|
           if e == cond
             classflag = false
@@ -191,11 +187,7 @@ module Enumerable
         end
       end
     elsif cond.nil? and !block_given?
-      if to_a.empty?
-        classflag = true
-      else
-        classflag = false
-      end
+      to_a.empty? ? classflag = true : classflag = false
     else
       true
     end
@@ -230,7 +222,7 @@ module Enumerable
     elsif !cond.nil?
       my_each do |e|
         counter += 1 if cond == e
-      end
+        end
       counter
     end
   end
@@ -250,8 +242,8 @@ module Enumerable
       new_array
     else
       new_array = self
-      new_array
     end
+    new_array
   end
 
   # my_inject Method
@@ -273,8 +265,8 @@ module Enumerable
       new_array
     else
       new_array = self
-      new_array
     end
+    new_array
   end
 end
 
