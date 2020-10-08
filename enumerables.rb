@@ -97,7 +97,7 @@ module Enumerable
             break
           end
         end
-      elsif cond.is_a?(Boolean)
+      elsif !cond.is_a?(Numeric) and cond.include?(true || false)
         my_each do |e|
           if e == cond
             classflag = true
@@ -129,7 +129,11 @@ module Enumerable
         end
       end
     elsif cond.nil? and !block_given?
-      empty? ? classflag = false : classflag = true
+      classflag = if empty?
+              false
+            else
+              true
+            end
     else
       false
     end
@@ -187,7 +191,11 @@ module Enumerable
         end
       end
     elsif cond.nil? and !block_given?
-      to_a.empty? ? classflag = true : classflag = false
+      classflag = if to_a.empty?
+        true
+      else
+        false
+      end
     else
       true
     end
@@ -222,7 +230,7 @@ module Enumerable
     elsif !cond.nil?
       my_each do |e|
         counter += 1 if cond == e
-        end
+      end
       counter
     end
   end
