@@ -42,6 +42,19 @@ module Enumerable
         end
       end
       flag
+    # Elsif for Regular Expression
+    elsif type.is_a?(Regexp)
+      self.my_each do |e|
+        classflag = true
+        if e.is_a?(String)
+          if e.match?(type)
+            classflag = true
+          else
+            return false
+          end
+        end
+      end
+      return true
     # Elsif for Class argument query
     elsif type.is_a?(Class) and type != Numeric and type != nil
       classflag = true
@@ -67,6 +80,11 @@ module Enumerable
       end
       classflag
     elsif not block_given? and type == nil
+      self.my_each do |m|
+        if m == nil 
+          return false
+        end
+      end
       true
     end
   end
@@ -100,7 +118,7 @@ def my_any?(cond = nil)
     elsif cond != Class and cond.is_a?(Regexp)
       self.my_each do |e|
         if e.is_a?(String)
-          if e.match(cond)
+          if e.match?(cond)
             classflag = true
             break
           end
@@ -161,7 +179,7 @@ def my_none?(cond = nil)
     elsif cond != Class and cond.is_a?(Regexp)
       self.my_each do |e|
         if e.is_a?(String)
-          if e.match(cond)
+          if e.match?(cond)
             classflag = false
             break
           end
@@ -184,7 +202,7 @@ def my_none?(cond = nil)
         end
       end
     elsif cond == nil and not block_given?
-      if self.empty?
+      if self.to_a.empty?
         classflag = true
       else
         classflag = false
