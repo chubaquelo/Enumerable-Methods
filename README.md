@@ -10,7 +10,7 @@ Using Linters for Ruby (Rubocop)
 Using Bundler.
 
 ## Live Demo
-[Live Demo Link](https://repl.it/@chubaquelo/Enumerable-Methods)
+[Live Demo Link](https://repl.it/@chubaquelo/Enumerable-Methods#enumerables.rb)
 
 🛠 Getting Started
 To get a local copy up and running follow these simple example steps.
