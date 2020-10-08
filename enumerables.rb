@@ -49,7 +49,7 @@ module Enumerable
           return false unless e.match?(type)
         end
       end
-      return true
+      true
     # Elsif for Class argument query
     elsif type.is_a?(Class) and type != Numeric and !type.nil?
       classflag = true
@@ -63,7 +63,7 @@ module Enumerable
     elsif type == Numeric
       classflag = true
       my_each do |m|
-        if m.class.superclass.name != "Numeric"
+        if m.class.superclass.name != 'Numeric'
           classflag = false
         elsif empty?
           classflag = false
@@ -97,7 +97,7 @@ module Enumerable
             break
           end
         end
-      elsif cond == true || cond == false
+      elsif cond.is_a?(Boolean)
         my_each do |e|
           if e == cond
             classflag = true
@@ -202,7 +202,7 @@ module Enumerable
     classflag
   end
 
-  # my_none Method (another approach)
+  # my_none Method (another approach), didn't work because we couldn't use yield on a yield...
   # def my_none_2?(cond = nil)
   #   res = false
   #   if !cond.nil?
@@ -222,9 +222,9 @@ module Enumerable
     if block_given?
       my_each do |f|
         counter += if yield f
+        end
+        counter
       end
-      counter
-    end
     elsif cond.nil?
       length
     elsif !cond.nil?
@@ -242,7 +242,7 @@ module Enumerable
       my_each do |e|
         new_array.push(pro.call(e))
       end
-      return new_array
+      new_array
     elsif block_given?
       my_each do |e|
         new_array.push(yield e)
@@ -270,8 +270,8 @@ module Enumerable
       my_each do |e|
         new_array.push(pro.call(e))
       end
-      return new_array
-    elsif
+      new_array
+    else
       new_array = self
       new_array
     end
