@@ -1,4 +1,4 @@
-# rubocop:disable Metrics/ModuleLength, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/BlockNesting
+# rubocop:disable Metrics/ModuleLength, Metrics/MethodLength, Layout/IndentationWidth, Layout/EndAlignment, Layout/ElseAlignment, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/BlockNesting
 
 module Enumerable
   # Each methods
@@ -283,4 +283,4 @@ def multiply_els(arr)
   res = arr.my_inject(1) { |result, element| result * element }
   res
 end
-# rubocop:enable Metrics/ModuleLength, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/BlockNesting
+# rubocop:enable Metrics/ModuleLength, Metrics/MethodLength, Layout/IndentationWidth, Layout/EndAlignment, Layout/ElseAlignment, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/BlockNesting
