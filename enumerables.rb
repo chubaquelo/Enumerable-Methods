@@ -250,6 +250,3 @@ def multiply_els(arr)
 end
 
 # rubocop:enable Metrics/ModuleLength, Metrics/MethodLength, Style/DoubleNegation, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/BlockNesting
-
-p [2, 0, 7, 1, 8, 8, 2, 0, 0, 5, 7, 2, 6, 5].map
-p [2, 0, 7, 1, 8, 8, 2, 0, 0, 5, 7, 2, 6, 5].my_map
