@@ -3,6 +3,7 @@
 module Enumerable
   # Each methods
   def my_each
+    return to_enum unless block_given?
     index = 0
     while index < size
       yield to_a[index]
@@ -13,6 +14,7 @@ module Enumerable
 
   # Each index
   def my_each_with_index
+    return to_enum unless block_given?
     index = 0
     while index < to_a.length
       yield(Array(self)[index], index)
@@ -23,6 +25,7 @@ module Enumerable
 
   # my_select Method
   def my_select
+    return to_enum unless block_given?
     new_arr = []
     my_each do |n|
       new_arr << n if yield(n)
@@ -70,9 +73,14 @@ module Enumerable
         end
       end
       classflag
+    elsif type != Numeric and type.is_a?(Numeric)
+      my_each do |m|
+        return false if m != type
+      end
+      true
     elsif !block_given? and type.nil?
       my_each do |m|
-        return false if m.nil?
+        return false if m.nil? || m == false
       end
       true
     end
@@ -97,13 +105,6 @@ module Enumerable
             break
           end
         end
-      elsif !cond.is_a?(Numeric) and cond.include?(true || false)
-        my_each do |e|
-          if e == cond
-            classflag = true
-            break
-          end
-        end
       elsif cond != Class and cond.is_a?(Regexp)
         my_each do |e|
           if e.is_a?(String)
@@ -111,6 +112,13 @@ module Enumerable
               classflag = true
               break
             end
+          end
+        end
+      elsif !cond.is_a?(Numeric) and !!cond == cond
+        my_each do |e|
+          if e == cond
+            classflag = true
+            break
           end
         end
       elsif cond.is_a?(Numeric) || cond.is_a?(String)
@@ -129,11 +137,10 @@ module Enumerable
         end
       end
     elsif cond.nil? and !block_given?
-      classflag = if empty?
-              false
-            else
-              true
-            end
+      my_each do |m|
+        return true if m == true
+      end
+      false
     else
       false
     end
@@ -158,13 +165,6 @@ module Enumerable
             break
           end
         end
-      elsif cond.is_a?(Boolean)
-        my_each do |e|
-          if e == cond
-            classflag = false
-            break
-          end
-        end
       elsif cond != Class and cond.is_a?(Regexp)
         my_each do |e|
           if e.is_a?(String)
@@ -172,6 +172,13 @@ module Enumerable
               classflag = false
               break
             end
+          end
+        end
+      elsif !cond.is_a?(Numeric) and !!cond == cond
+        my_each do |e|
+          if e == cond
+            classflag = false
+            break
           end
         end
       elsif cond.is_a?(Numeric) || cond.is_a?(String)
@@ -191,11 +198,10 @@ module Enumerable
         end
       end
     elsif cond.nil? and !block_given?
-      classflag = if to_a.empty?
-        true
-      else
-        false
+      my_each do |m|
+        return false if m == true
       end
+      true
     else
       true
     end
