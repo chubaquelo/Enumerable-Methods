@@ -1,9 +1,10 @@
-# rubocop:disable Metrics/ModuleLength, Metrics/MethodLength, Layout/IndentationWidth, Layout/EndAlignment, Layout/ElseAlignment, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/BlockNesting
+# rubocop:disable Metrics/ModuleLength, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Style/DoubleNegation, Metrics/BlockNesting
 
 module Enumerable
   # Each methods
   def my_each
     return to_enum unless block_given?
+
     index = 0
     while index < size
       yield to_a[index]
@@ -15,6 +16,7 @@ module Enumerable
   # Each index
   def my_each_with_index
     return to_enum unless block_given?
+
     index = 0
     while index < to_a.length
       yield(Array(self)[index], index)
@@ -26,6 +28,7 @@ module Enumerable
   # my_select Method
   def my_select
     return to_enum unless block_given?
+
     new_arr = []
     my_each do |n|
       new_arr << n if yield(n)
@@ -246,4 +249,4 @@ def multiply_els(arr)
   res
 end
 
-# rubocop:enable Metrics/ModuleLength, Metrics/MethodLength, Layout/IndentationWidth, Layout/EndAlignment, Layout/ElseAlignment, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/BlockNesting
+# rubocop:enable Metrics/ModuleLength, Metrics/MethodLength, Style/DoubleNegation, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/BlockNesting
