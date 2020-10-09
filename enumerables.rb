@@ -182,6 +182,9 @@ module Enumerable
         new_array.push(pro.call(e))
       end
       new_array
+    elsif !block_given?
+      new_array = to_enum
+      new_array
     elsif block_given?
       my_each do |e|
         new_array.push(yield e)
@@ -190,7 +193,7 @@ module Enumerable
     else
       new_array = self
     end
-    new_array.to_enum
+    new_array
   end
 
   # my_inject Method
