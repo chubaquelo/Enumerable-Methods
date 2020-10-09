@@ -147,92 +147,22 @@ module Enumerable
     classflag
   end
 
-  # my_none Method
-  def my_none?(cond = nil)
-    classflag = true
-    if !cond.nil?
-      if cond.is_a?(Class)
-        my_each do |e|
-          if e.is_a?(cond)
-            classflag = false
-            break
-          end
-        end
-      elsif cond == Numeric
-        my_each do |e|
-          if e.is_a?(Numeric)
-            classflag = false
-            break
-          end
-        end
-      elsif cond != Class and cond.is_a?(Regexp)
-        my_each do |e|
-          if e.is_a?(String)
-            if e.match?(cond)
-              classflag = false
-              break
-            end
-          end
-        end
-      elsif !cond.is_a?(Numeric) and !!cond == cond
-        my_each do |e|
-          if e == cond
-            classflag = false
-            break
-          end
-        end
-      elsif cond.is_a?(Numeric) || cond.is_a?(String)
-        my_each do |e|
-          if cond == e
-            classflag = false
-            break
-          end
-        end
-      end
+  # my_none Simplest Approach
 
-    elsif block_given?
-      my_each do |e|
-        if yield(e)
-          classflag = false
-          break
-        end
-      end
-    elsif cond.nil? and !block_given?
-      my_each do |m|
-        return false if m == true
-      end
-      true
-    else
-      true
-    end
-    classflag
+  def my_none?(arg = nil, &block)
+    !my_any?(arg, &block)
   end
-
-  # my_none Method (another approach), didn't work because we couldn't use yield on a yield...
-  # def my_none_2?(cond = nil)
-  #   res = false
-  #   if !cond.nil?
-  #     inv = self.my_any?(cond)
-  #   elsif block_given?
-  #     block = yield
-  #     inv = self.my_any? {yield.to_s}
-  #   end
-  #   inv == true ? res = false : res = true
-  #   res
-  #   block
-  # end
 
   # my_count Method
   def my_count(cond = nil)
     counter = 0
     if block_given?
       my_each do |f|
-        counter += if yield f
-        end
-        counter
+        counter += 1 if yield f
       end
+      counter
     elsif cond.nil?
-      length
+      to_a.length
     elsif !cond.nil?
       my_each do |e|
         counter += 1 if cond == e
@@ -261,13 +191,17 @@ module Enumerable
   end
 
   # my_inject Method
-  def my_inject(init = 0)
-    res = init
-    my_each do |e|
-      res = yield res, e
-    end
-    res
-  end
+  # def my_inject(*args)
+  #   if block_given?
+  #     to_a.my_each do |e|
+  #       res = yield res, e
+  #     end
+  #     res + args[0]
+  #   end
+  #   if !block_given?
+      
+  #   end
+  # end
 
   # my_map_proc Method
   def my_map_proc(pro)
@@ -290,3 +224,6 @@ def multiply_els(arr)
   res
 end
 # rubocop:enable Metrics/ModuleLength, Metrics/MethodLength, Layout/IndentationWidth, Layout/EndAlignment, Layout/ElseAlignment, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/BlockNesting
+
+# p (1..5).my_inject(0) {|n, m| n + m}
+# p (1..5).my_inject(:+)
