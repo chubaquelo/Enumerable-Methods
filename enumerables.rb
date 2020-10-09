@@ -191,17 +191,39 @@ module Enumerable
   end
 
   # my_inject Method
-  # def my_inject(*args)
-  #   if block_given?
-  #     to_a.my_each do |e|
-  #       res = yield res, e
-  #     end
-  #     res + args[0]
-  #   end
-  #   if !block_given?
-      
-  #   end
-  # end
+  def my_inject(*args)
+    array = to_a
+    if !block_given? && args.empty?
+      yield
+    else
+      if args.length == 1 && args[0].class == Symbol
+        symb = args[0]
+        res = nil
+      elsif args.length == 1
+        symb = nil
+        res = args[0]
+      elsif args.length == 2
+        symb = args[1]
+        res = args[0]
+      else
+        symb = nil
+        res = nil
+      end
+      if res.nil?
+        total = array[0]
+        check = 0
+      else
+        total = res
+        check = 1
+      end
+      lambda_ = symb.nil? ? ->(_, bar) { yield(total, bar) } : ->(_, bar) { total.send(symb, bar) }
+      array.my_each do |i|
+        total = lambda_.call(total, i) if check == 1
+        check = 1
+      end
+      total
+    end
+  end
 
   # my_map_proc Method
   def my_map_proc(pro)
@@ -223,7 +245,5 @@ def multiply_els(arr)
   res = arr.my_inject(1) { |result, element| result * element }
   res
 end
-# rubocop:enable Metrics/ModuleLength, Metrics/MethodLength, Layout/IndentationWidth, Layout/EndAlignment, Layout/ElseAlignment, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/BlockNesting
 
-# p (1..5).my_inject(0) {|n, m| n + m}
-# p (1..5).my_inject(:+)
+# rubocop:enable Metrics/ModuleLength, Metrics/MethodLength, Layout/IndentationWidth, Layout/EndAlignment, Layout/ElseAlignment, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/BlockNesting
